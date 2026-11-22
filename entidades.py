@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import re
 from excepciones import ErrorDatoInvalido, ErrorParametroFaltante
 class EntidadSistema(ABC):
-    ## Clase abstracta base para entidades generales del sistema (sin BD).
+    # Clase abstracta base para entidades generales del sistema (sin BD).
     def __init__(self, id_entidad: str):
         if not id_entidad or not str(id_entidad).strip():
             raise ErrorParametroFaltante("El identificador de la entidad es obligatorio.")
