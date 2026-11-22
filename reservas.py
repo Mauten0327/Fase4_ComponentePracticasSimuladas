@@ -105,7 +105,7 @@ class GestorReservasFJ:
         if any(c.id_entidad == cliente.id_entidad for c in self.clientes):
             raise ErrorOperacionInvalida(f"Cliente duplicado con ID {cliente.id_entidad}.")
         self.clientes.append(cliente)
-        logger_fj.info(f"Cliente agregado: {cliente._id_entidad} - {cliente.nombre}")
+        logger_fj.info(f"Cliente agregado: {cliente.id_entidad} - {cliente.nombre}")
 
     def agregar_servicio(self, servicio: Servicio) -> None:
         if any(s.codigo == servicio.codigo for s in self.servicios):
