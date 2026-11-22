@@ -1,26 +1,28 @@
 from abc import ABC, abstractmethod
 import re
 from excepciones import ErrorDatoInvalido, ErrorParametroFaltante
+
+
 class EntidadSistema(ABC):
-    # Clase abstracta base para entidades generales del sistema (sin BD).
+    # Clase base abstracta para entidades del sistema sin uso de base de datos.
     def __init__(self, id_entidad: str):
         if not id_entidad or not str(id_entidad).strip():
             raise ErrorParametroFaltante("El identificador de la entidad es obligatorio.")
         self._id_entidad = str(id_entidad).strip().upper()
 
-        @property
-        def id_entidad(self) -> str:
-        # Expone el ID en modo lectura para evitar alteraciones accidentales.
-            return self._id_entidad
+    @property
+    def id_entidad(self) -> str:
+        # Expone el identificador en solo lectura para proteger su integridad.
+        return self._id_entidad
 
     @abstractmethod
     def resumen(self) -> str:
-        # Cada subclase define cómo resumir su estado actual.
+        # Cada entidad concreta debe devolver un resumen legible de su estado.
         pass
 
+
 class Cliente(EntidadSistema):
-    # Encapsula datos del cliente y valida reglas básicas al asignar o modificar.
-    
+    # Encapsula datos personales del cliente y valida reglas al asignar o modificar.
     def __init__(
         self,
         id_cliente: str,
@@ -42,7 +44,7 @@ class Cliente(EntidadSistema):
     @nombre.setter
     def nombre(self, valor: str) -> None:
         if not valor or not isinstance(valor, str) or len(valor.strip()) < 3:
-            raise ErrorDatoInvalido("El nombre debe tener al menos 3 caracteres.")
+            raise ErrorDatoInvalido("El nombre del cliente debe tener al menos 3 caracteres.")
         self._nombre = valor.strip().title()
 
     @property
@@ -64,10 +66,12 @@ class Cliente(EntidadSistema):
 
     @telefono.setter
     def telefono(self, valor: str) -> None:
-        # Conserva solo dígitos para normalizar números con espacios o guiones.
+        # Extrae solo dígitos para normalizar números con espacios o separadores.
         solo_digitos = re.sub(r"\D", "", str(valor or ""))
         if len(solo_digitos) < 7 or len(solo_digitos) > 15:
-            raise ErrorDatoInvalido(f"Teléfono fuera de rango (7 a 15 dígitos): '{valor}'.")
+            raise ErrorDatoInvalido(
+                f"Teléfono fuera de rango (7 a 15 dígitos): '{valor}'."
+            )
         self._telefono = solo_digitos
 
     @property
@@ -80,6 +84,6 @@ class Cliente(EntidadSistema):
     def resumen(self) -> str:
         estado = "Activo" if self._activo else "Inactivo"
         return (
-            f"Cliente [{self._id_entidad}] {self._nombre} | "
+            f"Cliente [{self.id_entidad}] {self._nombre} | "
             f"Correo: {self._correo} | Tel: {self._telefono} | Estado: {estado}"
         )

@@ -10,7 +10,7 @@ from servicios import Servicio
 
 
 class Reserva:
-    # Gestiona el ciclo de vida de una reserva sin persistencia en base de datos.
+    # Gestiona el ciclo de vida de una reserva sin persistencia en base de datos[cite: 1].
     def __init__(
         self,
         id_reserva: str,
@@ -34,7 +34,7 @@ class Reserva:
                 f"El servicio {servicio.codigo} no está disponible para reservar."
             )
 
-        # Encadena la excepción original si el cálculo o las reglas de duración fallan.
+        # Encadena la excepción original si el cálculo o las reglas de duración fallan[cite: 2].
         try:
             self.total = servicio.calcular_costo(
                 horas,
@@ -55,7 +55,9 @@ class Reserva:
 
     def confirmar(self) -> None:
         if self.estado == "CANCELADA":
-            raise ErrorOperacionInvalida(f"La reserva {self.id_reserva} está cancelada y no puede confirmarse.")
+            raise ErrorOperacionInvalida(
+                f"La reserva {self.id_reserva} está cancelada y no puede confirmarse."
+            )
         if self.estado in {"CONFIRMADA", "PROCESADA"}:
             raise ErrorOperacionInvalida(
                 f"La reserva {self.id_reserva} ya fue {self.estado.lower()}."
@@ -95,7 +97,7 @@ class Reserva:
 
 
 class GestorReservasFJ:
-    # Mantiene colecciones en memoria durante la ejecución del programa.
+    # Mantiene colecciones en memoria durante la ejecución del programa[cite: 1].
     def __init__(self):
         self.clientes: list[Cliente] = []
         self.servicios: list[Servicio] = []
